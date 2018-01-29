@@ -93,3 +93,9 @@ test('null == undefined', function (t) {
     t.notOk(equal(null, undefined, { strict: true }))
     t.end()
 })
+
+test('rounding', function (t) {
+    t.ok(equal({ foo: 0.123456789}, { foo: 0.123456785}, { decimals: 8 }))
+    t.notOk(equal({ foo: 0.123456789 }, { foo: 0.123456780 }))
+    t.end()
+})

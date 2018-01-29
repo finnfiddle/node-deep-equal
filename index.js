@@ -2,6 +2,10 @@ var pSlice = Array.prototype.slice;
 var objectKeys = require('./lib/keys.js');
 var isArguments = require('./lib/is_arguments.js');
 
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
 var deepEqual = module.exports = function (actual, expected, opts) {
   if (!opts) opts = {};
   // 7.1. All identical values are equivalent, as determined by ===.
@@ -88,7 +92,11 @@ function objEquiv(a, b, opts) {
   //~~~possibly expensive deep test
   for (i = ka.length - 1; i >= 0; i--) {
     key = ka[i];
-    if (!deepEqual(a[key], b[key], opts)) return false;
+    if (opts.decimals && typeof a[key] === 'number' && typeof b[key] === 'number') {
+      if (round(a[key], opts.decimals) != round(b[key], opts.decimals))
+      return false;
+    }
+    else if (!deepEqual(a[key], b[key], opts)) return false;
   }
   return typeof a === typeof b;
 }
